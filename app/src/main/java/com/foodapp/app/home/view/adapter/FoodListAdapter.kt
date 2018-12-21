@@ -82,8 +82,10 @@ class FoodListAdapter(val items : ArrayList<FnblistItem>, val context: Context, 
                 val amt = str.toFloat();
                 Log.e("Adapter", ""+amt.toInt())
                 val price: Int = amt.toInt()
-                priceListener.updatePrice(price)
                 holder.totalCount.text = add.toString()
+                val qty = price * add
+                val ItemName = items.get(position).name.toUpperCase()+"    ?"+qty.toString()
+                priceListener.updatePrice(price, ItemName)
             }
         }
 
@@ -94,8 +96,11 @@ class FoodListAdapter(val items : ArrayList<FnblistItem>, val context: Context, 
                 val amt = str.toFloat();
                 Log.e("Adapter", ""+amt.toInt())
                 val price: Int = amt.toInt()
-                priceReduceListener.updateReducedPrice(price)
                 holder.totalCount.text = add.toString()
+                val qty = price * add
+                val ItemName = items.get(position).name.toUpperCase()+"    ?"+qty.toString()
+                priceReduceListener.updateReducedPrice(price, ItemName)
+
             }
 
         }

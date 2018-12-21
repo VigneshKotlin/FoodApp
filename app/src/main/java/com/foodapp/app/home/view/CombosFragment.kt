@@ -19,15 +19,17 @@ import kotlinx.android.synthetic.main.fragment_combos.view.*
 
 class CombosFragment : Fragment(), PriceUpdateListener, PriceReduceListener{
 
-    override fun updateReducedPrice(price: Int) {
+    override fun updateReducedPrice(price: Int, name: String) {
         val intent = Intent("price_reduce_receiver")
         intent.putExtra("price", price)
+        intent.putExtra("product_name", name)
         activity!!.sendBroadcast(intent)
     }
 
-    override fun updatePrice(price: Int) {
+    override fun updatePrice(price: Int, product: String) {
         val intent = Intent("price_receiver")
         intent.putExtra("price", price)
+        intent.putExtra("product_name", product)
         activity!!.sendBroadcast(intent)
     }
 

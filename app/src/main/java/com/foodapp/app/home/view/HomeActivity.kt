@@ -7,8 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.RelativeLayout
 import com.foodapp.app.R
 import com.foodapp.app.home.model.FoodListModel
 import com.foodapp.app.home.view.adapter.ViewPagerAdapter
@@ -20,10 +25,42 @@ import kotlinx.android.synthetic.main.activity_main.view.*
 class HomeActivity : AppCompatActivity(){
     lateinit var homeVM: HomeVM
     var price: Int = 0
+    val productArr: ArrayList<String> = ArrayList()
+    var productName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViews()
+        val behaviour = BottomSheetBehavior.from(bottom_sheet)
+        behaviour.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onSlide(p0: View, p1: Float) {
+                Log.e("onSlide", "onSlide")
+            }
+
+            override fun onStateChanged(p0: View, p1: Int) {
+                Log.e("onStateChanged", "onStateChanged:" )
+                if(p1 == BottomSheetBehavior.STATE_COLLAPSED){
+                    summery.visibility = GONE
+                    val params = RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                    total_amt_layout.layoutParams = params
+                }
+                if(p1 == BottomSheetBehavior.STATE_EXPANDED){
+                    summery.visibility = VISIBLE
+                    val params = RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
+                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                    total_amt_layout.layoutParams = params
+                }
+            }
+
+        })
+        pay_button.setOnClickListener{v ->
+            behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+            behaviour.isHideable = false
+        }
+        behaviour.peekHeight = 100
     }
 
     private fun initViews(){
@@ -52,6 +89,19 @@ class HomeActivity : AppCompatActivity(){
             if(p1 != null){
                 price += p1.getIntExtra("price", -1)
                 total_amount.text = "AED "+price+"  ^"
+                var strlist = p1.getStringExtra("product_name").split("?")
+
+                if(productArr.contains(strlist.get(0))){
+                    productArr.set(productArr.indexOf(strlist.get(0)), strlist.get(0))
+                }else {
+                    productArr.add(strlist.get(0))
+                }
+                productName = ""
+                for(i in productArr.indices){
+                    productName = productName + productArr.get(i)+"       "+ strlist.get(1)+ "\n"
+                }
+                product_detail.text = productName
+                Log.e("Activity", productName)
             }
         }
 
@@ -61,6 +111,20 @@ class HomeActivity : AppCompatActivity(){
             if(p1 != null){
                 price -= p1.getIntExtra("price", -1)
                 total_amount.text = "AED "+price+"  ^"
+                var strlist = p1.getStringExtra("product_name").split("?")
+
+                if(productArr.contains(strlist.get(0))){
+                    productArr.set(productArr.indexOf(strlist.get(0)), strlist.get(0))
+                }else {
+                    productArr.add(strlist.get(0))
+                }
+                productName = ""
+                for(i in productArr.indices){
+                    productName = productName + productArr.get(i)+"       "+ strlist.get(1)+"\n"
+
+                }
+                product_detail.text = productName
+                Log.e("Activity", productName)
             }
         }
 
