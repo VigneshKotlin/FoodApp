@@ -122,15 +122,20 @@ class HomeActivity : AppCompatActivity(){
 
                 if(productArr.contains(strlist.get(0))){
                     productArr.set(productArr.indexOf(strlist.get(0)), strlist.get(0))
+                    priceArr.set(productArr.indexOf(strlist.get(0)), strlist.get(1))
                 }else {
                     productArr.add(strlist.get(0))
+                    priceArr.add(strlist.get(1))
                 }
                 productName = ""
+                priceDetail = ""
                 for(i in productArr.indices){
-                    productName = productName + productArr.get(i)+"       "+ strlist.get(1)+"\n"
-
+                    productName = productName + productArr.get(i)+ "\n"
+                    priceDetail = priceDetail + priceArr.get(i)+ "\n"
                 }
                 product_detail.text = productName
+                price_detail.text = priceDetail
+                Log.e("Activity", productName)
                 Log.e("Activity", productName)
             }
         }
